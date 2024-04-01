@@ -20,6 +20,15 @@
 
     <string name="discoverZebra_title">Discover Zebra</string>
 
+    <string name="zebra_rw220">RW220</string>
+    <string name="zebra_rw320">RW320</string>
+    <string name="zebra_rw420">RW420</string>
+    <string name="zebra_textToPrint_hint">Text to print</string>
+    <string name="zebra_textToPrint_button">Print text</string>
+    <string name="zebra_imageToPrint_button">Print image</string>
+    <string name="zebra_image_content">Image</string>
+    <string name="zebra_error_printing">Printing failed!</string>
+
     <string name="discoverBrother_title">Discover Brother</string>
 
     <string name="discoverBixolon_title">Discover Bixolon</string>

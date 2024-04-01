@@ -21,6 +21,7 @@ fun AppScaffold(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
+        //.verticalScroll(rememberScrollState()),
         topBar = {
             AppTopAppBar(
                 title = title,
