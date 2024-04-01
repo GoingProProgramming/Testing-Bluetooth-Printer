@@ -4,11 +4,19 @@
     <string name="icon_back">Back</string>
     <string name="icon_next">Next</string>
 
+    <string name="dialog_discovering_title">Discovering</string>
+    <string name="dialog_discovering_message">Please wait while discovering the printer…</string>
+    <string name="dialog_printing_title">Printing</string>
+    <string name="dialog_printing_message">Please wait while printing…</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_button_ok">OK</string>
+
     <string name="home_title">Testing Bluetooth Printer</string>
     <string name="home_message">This app has been designed to test some Bluetooth printers that can be used by Android Apps.\n\nPress the button corresponding to the printer you want to test.</string>
     <string name="home_buttonZebra">Discover Zebra printer</string>
     <string name="home_buttonBrother">Discover Brother printer</string>
     <string name="home_buttonBixolon">Discover Bixolon printer</string>
+    <string name="home_errorBluetooth">Bluetooth non available! Unable to proceed.</string>
 
     <string name="discoverZebra_title">Discover Zebra</string>
 

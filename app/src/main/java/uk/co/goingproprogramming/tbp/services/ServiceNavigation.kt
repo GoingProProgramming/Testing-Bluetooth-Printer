@@ -3,6 +3,7 @@ package uk.co.goingproprogramming.tbp.services
 import androidx.navigation.NavController
 import uk.co.goingproprogramming.tbp.navigationGraph.Route
 import uk.co.goingproprogramming.tbp.navigationGraph.toRoute
+import uk.co.goingproprogramming.tbp.printer.IPrinterBluetooth
 import javax.inject.Inject
 
 interface IServiceNavigation {
@@ -40,6 +41,8 @@ interface IServiceNavigation {
      * Method when the back button is pressed to update the current
      */
     fun updateCurrentRoute()
+
+    var bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered
 }
 
 class ServiceNavigation @Inject constructor() : IServiceNavigation {
@@ -89,4 +92,12 @@ class ServiceNavigation @Inject constructor() : IServiceNavigation {
     override fun updateCurrentRoute() {
         currentRoute = navController.currentDestination?.route?.toRoute() ?: Route.Home
     }
+
+    private lateinit var _bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered
+
+    override var bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered
+        get() = _bluetoothDiscovered
+        set(value) {
+            _bluetoothDiscovered = value
+        }
 }

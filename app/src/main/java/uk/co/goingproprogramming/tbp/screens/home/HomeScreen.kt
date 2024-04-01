@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import uk.co.goingproprogramming.tbp.R
+import uk.co.goingproprogramming.tbp.components.AppDialogError
 import uk.co.goingproprogramming.tbp.components.AppScaffold
 import uk.co.goingproprogramming.tbp.ui.theme.TestingBluetoothPrinterTheme
 
@@ -27,9 +28,7 @@ fun ScreenHome(
     viewModel.state.observeAsState(initial = HomeViewModel.State()).value.apply {
         ScreenHomeUI(
             state = this,
-            onOpenPrinter = { printerType ->
-                viewModel.onEvent(HomeViewModel.Event.OnOpenPrinter(printerType))
-            }
+            onEvent = viewModel::onEvent,
         )
     }
 }
@@ -37,14 +36,22 @@ fun ScreenHome(
 @Composable
 fun ScreenHomeUI(
     state: HomeViewModel.State,
-    onOpenPrinter: (HomeViewModel.PrinterType) -> Unit,
+    onEvent: (HomeViewModel.Event) -> Unit,
 ) {
     val permissionsRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = {}
     )
     LaunchedEffect(key1 = true) {
-        permissionsRequest.launch(state.permissionList.toTypedArray())
+        if (state.bluetoothAvailable)
+            permissionsRequest.launch(state.permissionList.toTypedArray())
+    }
+
+    if (state.showBluetoothError) {
+        AppDialogError(
+            message = stringResource(id = R.string.home_errorBluetooth),
+            onDismiss = { onEvent(HomeViewModel.Event.OnDismissError) },
+        )
     }
 
     AppScaffold(
@@ -64,7 +71,8 @@ fun ScreenHomeUI(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { onOpenPrinter(HomeViewModel.PrinterType.Zebra) }
+            enabled = state.bluetoothAvailable,
+            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Zebra)) }
         ) {
             Text(
                 text = stringResource(id = R.string.home_buttonZebra),
@@ -73,7 +81,8 @@ fun ScreenHomeUI(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { onOpenPrinter(HomeViewModel.PrinterType.Brother) }
+            enabled = state.bluetoothAvailable,
+            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Brother)) }
         ) {
             Text(
                 text = stringResource(id = R.string.home_buttonBrother),
@@ -82,7 +91,8 @@ fun ScreenHomeUI(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { onOpenPrinter(HomeViewModel.PrinterType.Bixolon) }
+            enabled = state.bluetoothAvailable,
+            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Bixolon)) }
         ) {
             Text(
                 text = stringResource(id = R.string.home_buttonBixolon),
@@ -97,8 +107,23 @@ fun ScreenHomeUI(
 private fun ScreenHomeUIPreview() {
     TestingBluetoothPrinterTheme {
         ScreenHomeUI(
-            state = HomeViewModel.State(),
-            onOpenPrinter = {}
+            state = HomeViewModel.State(
+                bluetoothAvailable = true,
+            ),
+            onEvent = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_2)
+@Composable
+private fun ScreenHomeUIBluetoothNotAvailablePreview() {
+    TestingBluetoothPrinterTheme {
+        ScreenHomeUI(
+            state = HomeViewModel.State(
+                showBluetoothError = true,
+            ),
+            onEvent = {},
         )
     }
 }
