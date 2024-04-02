@@ -1,7 +1,5 @@
 package uk.co.goingproprogramming.tbp.screens.zebra
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -40,9 +38,9 @@ import uk.co.goingproprogramming.tbp.components.AppDialogPrinting
 import uk.co.goingproprogramming.tbp.components.AppDialogStoringImage
 import uk.co.goingproprogramming.tbp.components.AppRadioButton
 import uk.co.goingproprogramming.tbp.components.AppScaffold
+import uk.co.goingproprogramming.tbp.extensions.saveDrawableAsBitmapOnFile
 import uk.co.goingproprogramming.tbp.printer.IPrinterZebra
 import uk.co.goingproprogramming.tbp.ui.theme.TestingBluetoothPrinterTheme
-import java.io.File
 
 @Composable
 fun ScreenZebra(
@@ -54,21 +52,6 @@ fun ScreenZebra(
             onEvent = viewModel::onEvent,
         )
     }
-}
-
-private fun getBitmapFromImage(context: Context, drawable: Int): Bitmap =
-    BitmapFactory.decodeResource(context.resources, drawable)
-
-private fun saveDrawableAsBitmapOnFile(context: Context, drawable: Int): File {
-    val bitmap = getBitmapFromImage(context, drawable)
-    val file = File(context.cacheDir, "image.png")
-    if (file.exists())
-        file.delete()
-    file.outputStream().use { outputStream ->
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        outputStream.flush()
-    }
-    return file
 }
 
 @Composable
@@ -83,10 +66,7 @@ private fun ScreenZebraUI(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
-        val file = saveDrawableAsBitmapOnFile(
-            context = context,
-            drawable = R.drawable.logo_android,
-        )
+        val file = R.drawable.logo_android.saveDrawableAsBitmapOnFile(context)
         onEvent(ZebraViewModel.Event.OnBitmapFileChange(file))
     }
 

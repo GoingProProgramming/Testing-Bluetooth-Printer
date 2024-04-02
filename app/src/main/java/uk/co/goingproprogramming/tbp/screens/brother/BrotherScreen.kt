@@ -23,6 +23,7 @@ import uk.co.goingproprogramming.tbp.components.AppDialogLoading
 import uk.co.goingproprogramming.tbp.components.AppDialogPrinting
 import uk.co.goingproprogramming.tbp.components.AppScaffold
 import uk.co.goingproprogramming.tbp.components.PdfViewer
+import uk.co.goingproprogramming.tbp.printer.PrinterBrotherExceptionType
 import uk.co.goingproprogramming.tbp.ui.theme.TestingBluetoothPrinterTheme
 import java.io.File
 
@@ -80,9 +81,14 @@ fun ScreenBrotherUI(
         AppDialogLoading()
     }
 
-    if (state.errorPrinting) {
+    state.errorType?.let {
+        val errorMessageId = when (it) {
+            PrinterBrotherExceptionType.UnsupportedPrinter -> R.string.brother_error_printerNotSupported
+            PrinterBrotherExceptionType.ErrorConnecting -> R.string.brother_error_connectionFailure
+            PrinterBrotherExceptionType.ErrorPrinting -> R.string.brother_error_printingFailure
+        }
         AppDialogError(
-            message = stringResource(id = R.string.zebra_error_printing),
+            message = stringResource(id = errorMessageId),
             onDismiss = { onEvent(BrotherViewModel.Event.OnErrorPrintingDismiss) },
         )
     }
@@ -164,12 +170,40 @@ private fun ScreenBrotherUIPrintingPreview() {
 
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 @Composable
-private fun ScreenBrotherUIErrorPreview() {
+private fun ScreenBrotherUIUnsupportedPrinterErrorPreview() {
     TestingBluetoothPrinterTheme {
         ScreenBrotherUI(
             state = BrotherViewModel.State(
                 printerName = "Printer Name",
-                errorPrinting = true,
+                errorType = PrinterBrotherExceptionType.UnsupportedPrinter,
+            ),
+            onEvent = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_2)
+@Composable
+private fun ScreenBrotherUIConnectiongErrorPreview() {
+    TestingBluetoothPrinterTheme {
+        ScreenBrotherUI(
+            state = BrotherViewModel.State(
+                printerName = "Printer Name",
+                errorType = PrinterBrotherExceptionType.ErrorConnecting,
+            ),
+            onEvent = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_2)
+@Composable
+private fun ScreenBrotherUIPrintingErrorPreview() {
+    TestingBluetoothPrinterTheme {
+        ScreenBrotherUI(
+            state = BrotherViewModel.State(
+                printerName = "Printer Name",
+                errorType = PrinterBrotherExceptionType.ErrorPrinting,
             ),
             onEvent = {},
         )

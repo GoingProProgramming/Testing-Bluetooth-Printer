@@ -9,6 +9,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.co.goingproprogramming.tbp.extensions.toFile
 import uk.co.goingproprogramming.tbp.printer.IPrinterBrother
+import uk.co.goingproprogramming.tbp.printer.PrinterBrotherException
+import uk.co.goingproprogramming.tbp.printer.PrinterBrotherExceptionType
 import uk.co.goingproprogramming.tbp.screens.ViewModelBase
 import uk.co.goingproprogramming.tbp.services.IServiceLogError
 import uk.co.goingproprogramming.tbp.services.IServiceNavigation
@@ -29,7 +31,7 @@ class BrotherViewModel @Inject constructor(
         val printerName: String = "",
         val pdfFile: File? = null,
         val pdfInputStream: InputStream? = null,
-        val errorPrinting: Boolean = false,
+        val errorType: PrinterBrotherExceptionType? = null,
     )
 
     sealed interface Event {
@@ -103,7 +105,7 @@ class BrotherViewModel @Inject constructor(
 
     private fun doErrorPrintingDismiss() {
         localState = localState.copy(
-            errorPrinting = false,
+            errorType = null,
         )
     }
 
@@ -118,15 +120,15 @@ class BrotherViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.Main) {
                     localState = localState.copy(
                         printing = false,
-                        errorPrinting = false,
+                        errorType = null,
                     )
                 }
-            } catch (e: Exception) {
+            } catch (e: PrinterBrotherException) {
                 serviceLogError.logError(e)
                 viewModelScope.launch(Dispatchers.Main) {
                     localState = localState.copy(
                         printing = false,
-                        errorPrinting = true,
+                        errorType = e.type,
                     )
                 }
             }

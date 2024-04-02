@@ -43,6 +43,16 @@
     <string name="brother_pdfToPrint_tapToChange">Tap on the pdf image to select a new one</string>
     <string name="brother_pdfToPrint_button">Print PDF</string>
     <string name="brother_pdf_content">PDF</string>
+    <string name="brother_error_printerNotSupported">Printer not supported!</string>
+    <string name="brother_error_connectionFailure">Failure connecting to the printer</string>
+    <string name="brother_error_printingFailure">Print failure</string>
 
     <string name="discoverBixolon_title">Discover Bixolon</string>
+
+    <string name="bixolon_image_content">Image</string>
+    <string name="bixolon_imageToPrint_tapToChange">Tap on the image to select a new one</string>
+    <string name="bixolon_imageToPrint_button">Print image</string>
+    <string name="bixolon_error_printerNotSupported">Printer not supported!</string>
+    <string name="bixolon_error_printerNotEnabled">Printer not enabled!</string>
+    <string name="bixolon_error_printerError">Printer failure!</string>
 </resources>

@@ -6,9 +6,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import uk.co.goingproprogramming.tbp.printer.IPrinterBixolon
 import uk.co.goingproprogramming.tbp.printer.IPrinterBluetooth
 import uk.co.goingproprogramming.tbp.printer.IPrinterBrother
 import uk.co.goingproprogramming.tbp.printer.IPrinterZebra
+import uk.co.goingproprogramming.tbp.printer.PrinterBixolon
 import uk.co.goingproprogramming.tbp.printer.PrinterBluetooth
 import uk.co.goingproprogramming.tbp.printer.PrinterBrother
 import uk.co.goingproprogramming.tbp.printer.PrinterZebra
@@ -35,4 +37,11 @@ object ModulePrinter {
         @ApplicationContext appContext: Context,
     ): IPrinterBrother =
         PrinterBrother(appContext)
+
+    @Provides
+    @Singleton
+    fun providePrinterBixolon(
+        @ApplicationContext appContext: Context,
+    ): IPrinterBixolon =
+        PrinterBixolon(appContext)
 }
