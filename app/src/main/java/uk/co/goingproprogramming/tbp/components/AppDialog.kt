@@ -34,6 +34,14 @@ fun AppDialogStoringImage() {
 }
 
 @Composable
+fun AppDialogLoading() {
+    AppDialog(
+        title = stringResource(id = R.string.dialog_loading_title),
+        message = stringResource(id = R.string.dialog_loading_message),
+    )
+}
+
+@Composable
 fun AppDialogError(
     message: String,
     onDismiss: () -> Unit,
@@ -104,6 +112,14 @@ private fun AppDialogPrintingPreview() {
 private fun AppDialogStoringImagePreview() {
     TestingBluetoothPrinterTheme {
         AppDialogStoringImage()
+    }
+}
+
+@Preview
+@Composable
+private fun AppDialogLoadingPreview() {
+    TestingBluetoothPrinterTheme {
+        AppDialogLoading()
     }
 }
 

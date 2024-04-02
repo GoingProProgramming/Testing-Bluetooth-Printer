@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.co.goingproprogramming.tbp.extensions.toFile
 import uk.co.goingproprogramming.tbp.printer.IPrinterBrother
@@ -12,6 +13,7 @@ import uk.co.goingproprogramming.tbp.screens.ViewModelBase
 import uk.co.goingproprogramming.tbp.services.IServiceLogError
 import uk.co.goingproprogramming.tbp.services.IServiceNavigation
 import java.io.File
+import java.io.InputStream
 import java.util.UUID
 import javax.inject.Inject
 
@@ -23,8 +25,10 @@ class BrotherViewModel @Inject constructor(
 ) : ViewModelBase<BrotherViewModel.State>(State()) {
     data class State(
         val printing: Boolean = false,
+        val loading: Boolean = false,
         val printerName: String = "",
         val pdfFile: File? = null,
+        val pdfInputStream: InputStream? = null,
         val errorPrinting: Boolean = false,
     )
 
@@ -55,15 +59,29 @@ class BrotherViewModel @Inject constructor(
     private fun doPdfFileChange(pdfFile: File) {
         localState = localState.copy(
             pdfFile = pdfFile,
+            pdfInputStream = pdfFile.inputStream(),
         )
     }
 
     private fun doPdfUriChange(context: Context, uri: Uri) {
         localState.pdfFile?.delete()
-
+        localState.pdfInputStream?.close()
         localState = localState.copy(
-            pdfFile = uri.toFile(context, UUID.randomUUID().toString()),
+            pdfInputStream = null,
+            loading = true,
         )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(1000)
+            viewModelScope.launch(Dispatchers.Main) {
+                val pdfFile = uri.toFile(context, UUID.randomUUID().toString())
+                localState = localState.copy(
+                    pdfFile = pdfFile,
+                    pdfInputStream = pdfFile.inputStream(),
+                    loading = false,
+                )
+            }
+        }
     }
 
     private fun doPrintPdf() {
