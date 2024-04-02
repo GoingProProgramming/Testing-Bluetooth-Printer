@@ -21,6 +21,9 @@ interface IPrinterZebra {
     suspend fun storeImage(imageName: String, bitmapFile: File, macAddress: String)
 
     @Throws(PrinterZebraException::class)
+    suspend fun printStoredImage(imageName: String, macAddress: String, zebraInches: ZebraInches)
+
+    @Throws(PrinterZebraException::class)
     suspend fun print(text: String, macAddress: String, zebraInches: ZebraInches)
 
     @Throws(PrinterZebraException::class)
@@ -45,6 +48,20 @@ class PrinterZebra @Inject constructor() : IPrinterZebra {
             }
         } catch (e: Exception) {
             throw PrinterZebraException(e.message ?: "Error while storing image")
+        }
+
+    override suspend fun printStoredImage(
+        imageName: String,
+        macAddress: String,
+        zebraInches: IPrinterZebra.ZebraInches,
+    ) =
+        try {
+            print(macAddress) { connection ->
+                connection.write(resetPrinter(zebraInches).toByteArray())
+                connection.write(commandStoredImage.format(imageName).toByteArray())
+            }
+        } catch (e: Exception) {
+            throw PrinterZebraException(e.message ?: "Error while printing stored image")
         }
 
     override suspend fun print(
@@ -135,4 +152,6 @@ class PrinterZebra @Inject constructor() : IPrinterZebra {
         "! U1\r\n! U1 SETLP-TIMEOUT 24\r\n! U1 COUNTRY ITALY\r\n! U1 LMARGIN 20\r\n! U1 PW {0}\r\n"
     private val commandBitmap =
         "! U1 JOURNAL\r\n! U1 SETFF 50 2\r\n"
+    private val commandStoredImage =
+        "! U1 PCX 0 0 !<{0}.pcx\r\n"
 }

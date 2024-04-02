@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +23,6 @@ fun AppScaffold(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
-        //.verticalScroll(rememberScrollState()),
         topBar = {
             AppTopAppBar(
                 title = title,
@@ -33,7 +34,8 @@ fun AppScaffold(
             modifier = Modifier
                 .padding(paddingValue)
                 .padding(defaultPadding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             content()

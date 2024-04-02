@@ -4,9 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +20,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,6 +80,7 @@ private fun ScreenZebraUI(
     }
 
     val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         val file = saveDrawableAsBitmapOnFile(
             context = context,
@@ -79,6 +88,15 @@ private fun ScreenZebraUI(
         )
         onEvent(ZebraViewModel.Event.OnBitmapFileChange(file))
     }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            uri?.let {
+                onEvent(ZebraViewModel.Event.OnBitmapUriChange(context, it))
+            }
+        },
+    )
 
     if (state.printing) {
         AppDialogPrinting()
@@ -122,24 +140,33 @@ private fun ScreenZebraUI(
                 text = stringResource(id = R.string.zebra_textToPrint_button),
             )
         }
-        state.bitmapFile?.let { bitmapFile ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Image(
-                    modifier = Modifier
-                        .size(200.dp)
-                        .aspectRatio(1f)
-                        .background(Color.Gray),
-                    bitmap = BitmapFactory.decodeFile(bitmapFile.absolutePath)
-                        .asImageBitmap(),
-                    //painter = painterResource(id = R.drawable.logo_android),
-                    contentDescription = stringResource(id = R.string.zebra_image_content),
-                )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            val bitmap = state.bitmapFile?.let {
+                BitmapFactory.decodeFile(it.absolutePath).asImageBitmap()
+            } ?: run {
+                ImageBitmap.imageResource(R.drawable.logo_android)
             }
+            Image(
+                modifier = Modifier
+                    .size(200.dp)
+                    .aspectRatio(1f)
+                    .clickable { launcher.launch("image/*") },
+                bitmap = bitmap,
+                contentDescription = stringResource(id = R.string.zebra_image_content),
+            )
         }
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = stringResource(id = R.string.zebra_imageToPrint_tapToChange),
+            textAlign = TextAlign.Center,
+            fontStyle = FontStyle.Italic,
+        )
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -149,6 +176,56 @@ private fun ScreenZebraUI(
             Text(
                 text = stringResource(id = R.string.zebra_imageToPrint_button),
             )
+        }
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = stringResource(id = R.string.zebra_storedImage_title),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .weight(1f),
+                value = state.storedImageName,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.zebra_storedImage_hint),
+                    )
+                },
+                onValueChange = { onEvent(ZebraViewModel.Event.OnPrintStoredImageTextChange(it)) },
+            )
+            Column(
+                modifier = Modifier
+                    .weight(1f),
+            ) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    enabled = state.storedImageName.isNotBlank(),
+                    onClick = { onEvent(ZebraViewModel.Event.OnStoreImage) }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.zebra_storedImage_store),
+                    )
+                }
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    enabled = state.storedImageName.isNotBlank(),
+                    onClick = { onEvent(ZebraViewModel.Event.OnPrintStoredImage) }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.zebra_storedImage_print),
+                    )
+                }
+            }
         }
     }
 }
@@ -204,6 +281,7 @@ private fun ScreenZebraUIValuesPreview() {
             state = ZebraViewModel.State(
                 printerName = "Printer Name",
                 textToPrint = "This is a test",
+                storedImageName = "logo",
             ),
             onEvent = {},
         )
