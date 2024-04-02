@@ -38,5 +38,9 @@
 
     <string name="discoverBrother_title">Discover Brother</string>
 
+    <string name="brother_pdfToPrint_tapToChange">Tap on the pdf image to select a new one</string>
+    <string name="brother_pdfToPrint_button">Print PDF</string>
+    <string name="brother_pdf_content">PDF</string>
+
     <string name="discoverBixolon_title">Discover Bixolon</string>
 </resources>
