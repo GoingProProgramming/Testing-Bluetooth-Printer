@@ -17,9 +17,15 @@ import androidx.compose.ui.unit.dp
 fun AppScaffold(
     title: String,
     defaultPadding: Dp = 16.dp,
+    enableVerticalScroll: Boolean = false,
     onBack: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val subModifier = if (enableVerticalScroll)
+        Modifier.verticalScroll(rememberScrollState())
+    else
+        Modifier
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -35,7 +41,7 @@ fun AppScaffold(
                 .padding(paddingValue)
                 .padding(defaultPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .then(subModifier),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             content()

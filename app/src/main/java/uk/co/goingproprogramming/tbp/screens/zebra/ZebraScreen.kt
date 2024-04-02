@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import uk.co.goingproprogramming.tbp.R
 import uk.co.goingproprogramming.tbp.components.AppDialogError
 import uk.co.goingproprogramming.tbp.components.AppDialogPrinting
+import uk.co.goingproprogramming.tbp.components.AppDialogStoringImage
 import uk.co.goingproprogramming.tbp.components.AppRadioButton
 import uk.co.goingproprogramming.tbp.components.AppScaffold
 import uk.co.goingproprogramming.tbp.printer.IPrinterZebra
@@ -102,6 +103,10 @@ private fun ScreenZebraUI(
         AppDialogPrinting()
     }
 
+    if (state.storingImage) {
+        AppDialogStoringImage()
+    }
+
     if (state.errorPrinting) {
         AppDialogError(
             message = stringResource(id = R.string.zebra_error_printing),
@@ -111,6 +116,7 @@ private fun ScreenZebraUI(
 
     AppScaffold(
         title = state.printerName,
+        enableVerticalScroll = true,
         onBack = { onEvent(ZebraViewModel.Event.OnBack) },
     ) {
         ZebraInches(

@@ -81,7 +81,8 @@ fun ScreenHomeUI(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            enabled = state.bluetoothAvailable,
+            enabled = false,
+            //enabled = state.bluetoothAvailable,
             onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Brother)) }
         ) {
             Text(
@@ -91,7 +92,8 @@ fun ScreenHomeUI(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            enabled = state.bluetoothAvailable,
+            enabled = false,
+//            enabled = state.bluetoothAvailable,
             onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Bixolon)) }
         ) {
             Text(

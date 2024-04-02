@@ -26,6 +26,14 @@ fun AppDialogPrinting() {
 }
 
 @Composable
+fun AppDialogStoringImage() {
+    AppDialog(
+        title = stringResource(id = R.string.dialog_storingImage_title),
+        message = stringResource(id = R.string.dialog_storingImage_message),
+    )
+}
+
+@Composable
 fun AppDialogError(
     message: String,
     onDismiss: () -> Unit,
@@ -88,6 +96,14 @@ private fun AppDialogDiscoveringPreview() {
 private fun AppDialogPrintingPreview() {
     TestingBluetoothPrinterTheme {
         AppDialogPrinting()
+    }
+}
+
+@Preview
+@Composable
+private fun AppDialogStoringImagePreview() {
+    TestingBluetoothPrinterTheme {
+        AppDialogStoringImage()
     }
 }
 

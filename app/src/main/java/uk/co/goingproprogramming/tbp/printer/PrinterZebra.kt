@@ -149,9 +149,9 @@ class PrinterZebra @Inject constructor() : IPrinterZebra {
         }
 
     private val commandReset =
-        "! U1\r\n! U1 SETLP-TIMEOUT 24\r\n! U1 COUNTRY ITALY\r\n! U1 LMARGIN 20\r\n! U1 PW {0}\r\n"
+        "! U1\r\n! U1 SETLP-TIMEOUT 24\r\n! U1 COUNTRY ITALY\r\n! U1 LMARGIN 20\r\n! U1 PW %s\r\n"
     private val commandBitmap =
         "! U1 JOURNAL\r\n! U1 SETFF 50 2\r\n"
     private val commandStoredImage =
-        "! U1 PCX 0 0 !<{0}.pcx\r\n"
+        "! U1 PCX 0 0 !<%s.pcx\r\n"
 }

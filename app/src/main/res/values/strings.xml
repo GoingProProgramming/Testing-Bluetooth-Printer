@@ -8,6 +8,8 @@
     <string name="dialog_discovering_message">Please wait while discovering the printer…</string>
     <string name="dialog_printing_title">Printing</string>
     <string name="dialog_printing_message">Please wait while printing…</string>
+    <string name="dialog_storingImage_title">Storing image</string>
+    <string name="dialog_storingImage_message">Please wait while storing image…</string>
     <string name="dialog_error_title">Error</string>
     <string name="dialog_button_ok">OK</string>
 

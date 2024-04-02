@@ -25,6 +25,7 @@ class ZebraViewModel @Inject constructor(
         val zebraInches: IPrinterZebra.ZebraInches = IPrinterZebra.ZebraInches.Inches2,
         val textToPrint: String = "",
         val bitmapFile: File? = null,
+        val storingImage: Boolean = false,
         val storedImageName: String = "",
         val errorPrinting: Boolean = false,
     )
@@ -133,7 +134,7 @@ class ZebraViewModel @Inject constructor(
             return
         }
 
-        print {
+        storeImage {
             printerZebra.storeImage(
                 imageName = localState.storedImageName,
                 bitmapFile = localState.bitmapFile!!,
@@ -174,6 +175,31 @@ class ZebraViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.Main) {
                     localState = localState.copy(
                         printing = false,
+                        errorPrinting = true,
+                    )
+                }
+            }
+        }
+    }
+
+    private fun storeImage(content: suspend () -> Unit) {
+        localState = localState.copy(
+            storingImage = true,
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                content()
+                viewModelScope.launch(Dispatchers.Main) {
+                    localState = localState.copy(
+                        storingImage = false,
+                        errorPrinting = false,
+                    )
+                }
+            } catch (_: Exception) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    localState = localState.copy(
+                        storingImage = false,
                         errorPrinting = true,
                     )
                 }
