@@ -10,7 +10,7 @@ class AppApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Bugfender.init(this, "sJcRQFOhkJUcTyUXCrgjM4RiHpg99g97", false, true)
+        Bugfender.init(this, "xxlbWQR2whyKSvIIcgClWNZZSt1G0zu2", false, true)
         Bugfender.enableCrashReporting()
     }
 }
