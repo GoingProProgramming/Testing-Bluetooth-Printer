@@ -67,7 +67,7 @@ class DiscoverBixolonViewModel @Inject constructor(
 
     private fun doOpenPrinter(bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered) {
         serviceNavigation.bluetoothDiscovered = bluetoothDiscovered
-        serviceNavigation.open(Route.Zebra, true)
+        serviceNavigation.open(Route.Bixolon, true)
     }
 
     private fun doBack() {
