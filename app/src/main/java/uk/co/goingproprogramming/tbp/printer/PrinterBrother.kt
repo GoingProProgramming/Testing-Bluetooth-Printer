@@ -17,6 +17,8 @@ enum class PrinterBrotherExceptionType {
 data class PrinterBrotherException(val type: PrinterBrotherExceptionType) : Exception()
 
 interface IPrinterBrother {
+    fun isBrotherPrinter(name: String): Boolean
+
     @Throws(PrinterBrotherException::class)
     suspend fun print(pdfFile: File, bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered)
 }
@@ -24,6 +26,14 @@ interface IPrinterBrother {
 class PrinterBrother(
     private val context: Context,
 ) : IPrinterBrother {
+    override fun isBrotherPrinter(name: String): Boolean =
+        try {
+            getPrinterModel(name)
+            true
+        } catch (e: PrinterBrotherException) {
+            false
+        }
+
     override suspend fun print(
         pdfFile: File,
         bluetoothDiscovered: IPrinterBluetooth.BluetoothDiscovered,

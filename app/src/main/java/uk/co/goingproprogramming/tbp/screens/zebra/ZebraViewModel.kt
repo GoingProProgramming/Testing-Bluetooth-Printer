@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import uk.co.goingproprogramming.tbp.extensions.toFile
 import uk.co.goingproprogramming.tbp.printer.IPrinterZebra
 import uk.co.goingproprogramming.tbp.screens.ViewModelBase
+import uk.co.goingproprogramming.tbp.services.IServiceLogError
 import uk.co.goingproprogramming.tbp.services.IServiceNavigation
 import java.io.File
 import java.util.UUID
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ZebraViewModel @Inject constructor(
     private val serviceNavigation: IServiceNavigation,
+    private val serviceLogError: IServiceLogError,
     private val printerZebra: IPrinterZebra,
 ) : ViewModelBase<ZebraViewModel.State>(State()) {
     data class State(
@@ -171,7 +173,8 @@ class ZebraViewModel @Inject constructor(
                         errorPrinting = false,
                     )
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                serviceLogError.logError(e)
                 viewModelScope.launch(Dispatchers.Main) {
                     localState = localState.copy(
                         printing = false,
@@ -196,7 +199,8 @@ class ZebraViewModel @Inject constructor(
                         errorPrinting = false,
                     )
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                serviceLogError.logError(e)
                 viewModelScope.launch(Dispatchers.Main) {
                     localState = localState.copy(
                         storingImage = false,

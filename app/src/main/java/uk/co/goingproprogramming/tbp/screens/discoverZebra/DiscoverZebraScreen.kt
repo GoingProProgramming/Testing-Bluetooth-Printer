@@ -107,21 +107,21 @@ private fun ScreenDiscoverZebraUILoadingPreview() {
 private val bluetoothDiscoveredList: List<UIBluetoothDiscovered> = listOf(
     UIBluetoothDiscovered(
         IPrinterBluetooth.BluetoothDiscovered(
-            name = "Zebra 1",
+            name = "Zebra",
             macAddress = "01:02:03:04",
         ),
         true,
     ),
     UIBluetoothDiscovered(
         IPrinterBluetooth.BluetoothDiscovered(
-            name = "Zebra 2",
+            name = "Brother",
             macAddress = "05:06:07:08",
         ),
         false,
     ),
     UIBluetoothDiscovered(
         IPrinterBluetooth.BluetoothDiscovered(
-            name = "Zebra 3",
+            name = "Bixolon",
             macAddress = "09:0A:0B:0C",
         ),
         false,
