@@ -11,6 +11,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
 class PrinterBluetoothException(message: String) : Exception(message)
@@ -49,8 +50,8 @@ class PrinterBluetooth @Inject constructor(
             callbackFlow {
                 val callback = object : DiscoveryHandler {
                     override fun foundPrinter(discoveredPrinter: DiscoveredPrinter?) {
-                        discoveredPrinter.toBluetoothDiscovered()?.let { zebraDiscovered ->
-                            trySend(zebraDiscovered)
+                        discoveredPrinter.toBluetoothDiscovered()?.let { bluetoothDiscovered ->
+                            trySend(bluetoothDiscovered)
                         }
                     }
 
@@ -59,14 +60,14 @@ class PrinterBluetooth @Inject constructor(
                     }
 
                     override fun discoveryError(message: String?) {
-                        cancel(message ?: "Error while discovering printers")
+                        cancel(CancellationException(message ?: "Error while discovering printers"))
                     }
                 }
                 BluetoothDiscoverer.findPrinters(context, callback)
                 awaitClose {}
             }
         } catch (e: Exception) {
-            throw PrinterZebraException(e.message ?: "Error while discovering")
+            throw PrinterBluetoothException(e.message ?: "Error while discovering")
         }
 }
 

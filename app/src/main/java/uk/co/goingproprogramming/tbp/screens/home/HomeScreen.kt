@@ -3,6 +3,7 @@ package uk.co.goingproprogramming.tbp.screens.home
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -68,34 +69,67 @@ fun ScreenHomeUI(
                 textAlign = TextAlign.Center,
             )
         }
-        Button(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            enabled = state.bluetoothAvailable,
-            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Zebra)) }
         ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enabled = state.bluetoothAvailable,
+                onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Zebra)) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.home_buttonZebra),
+                )
+            }
             Text(
-                text = stringResource(id = R.string.home_buttonZebra),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.home_buttonZebraNote),
+                textAlign = TextAlign.Center,
             )
         }
-        Button(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            enabled = state.bluetoothAvailable,
-            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Brother)) }
         ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enabled = state.bluetoothAvailable,
+                onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Brother)) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.home_buttonBrother),
+                )
+            }
             Text(
-                text = stringResource(id = R.string.home_buttonBrother),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.home_buttonBrotherNote),
+                textAlign = TextAlign.Center,
             )
         }
-        Button(
+        Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            enabled = state.bluetoothAvailable,
-            onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Bixolon)) }
         ) {
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                enabled = state.bluetoothAvailable,
+                onClick = { onEvent(HomeViewModel.Event.OnOpenPrinter(HomeViewModel.PrinterType.Bixolon)) }
+            ) {
+                Text(
+                    text = stringResource(id = R.string.home_buttonBixolon),
+                )
+            }
             Text(
-                text = stringResource(id = R.string.home_buttonBixolon),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.home_buttonBixolonNote),
+                textAlign = TextAlign.Center,
             )
         }
     }

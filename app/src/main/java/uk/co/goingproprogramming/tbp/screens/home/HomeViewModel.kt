@@ -18,7 +18,7 @@ class HomeViewModel @Inject constructor(
     data class State(
         val permissionList: List<String> = emptyList(),
         val bluetoothAvailable: Boolean = false,
-        val showBluetoothError: Boolean = true,
+        val showBluetoothError: Boolean = false,
     )
 
     enum class PrinterType {
